@@ -63,7 +63,7 @@ def filterWord(wlist):
     
     wlist = [word.lower() for word in wlist]
     wListCountDict = {} 
-    charToRemove = ['"' , '\ufeff', '\r' , 'c’' , ';' , '’' ,'-' , '\n' ,'\t' , '?' , '&' , '#' , '$' ,  '.' , ',' , ']' , '[' , '!' , '&' , '(' , ')','”' , '%', "'"]
+    charToRemove = ['"' , '\ufeff', '\r' , '-' , '_' , 'c’' , ';' , '’' ,'-' , '\n' ,'\t' , '?' , '&' , '#' , '$' ,  '.' , ',' , ']' , '[' , '!' , '&' , '(' , ')','”' , '%', "'"]
     #filtered list of words which do not contain junk characters
     filteredList = []
     
@@ -81,6 +81,28 @@ def filterWord(wlist):
                     wListCountDict[word] = 1     
     return wListCountDict,filteredList
 
+
+def uniqueWordFollowingWord(filteredList):
+    uniqueWord = list(set(filteredList))
+    uniqueWordDict = dict.fromkeys(uniqueWord)
+    for index , word in enumerate(filteredList):
+        try:   
+            if word in uniqueWordDict:        
+                nextWord = filteredList[index + 1]
+                childDict = uniqueWordDict[word]            
+                if childDict is None:
+                    #create empty child dict if not already exit
+                    childDict = {}
+                if nextWord in childDict:
+                    childDict[nextWord] += 1
+                else:
+                    childDict[nextWord] = 1
+                
+                uniqueWordDict[word] = childDict            
+        except Exception:
+            pass    
+        
+    return uniqueWordDict
 
 
 def topFiveWords(wListCountDict):    
